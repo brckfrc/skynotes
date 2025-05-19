@@ -26,6 +26,7 @@ backend/.cache/
 **/.env
 **/.env.*
 backend/config.json
+frontend\skynotes-frontend\.env
 
 # === Logs and Temp Files ===
 logs/

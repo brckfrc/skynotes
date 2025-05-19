@@ -355,6 +355,21 @@ app.get("/search-notes/", authenticateToken, async (req, res) => {
   }
 });
 
+//404 middleware
+app.use((req, res, next) => {
+  res.status(404).json({ success: false, message: "Page not found" });
+});
+
+// Error-handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    success: false,
+    message: "An internal server error occurred",
+    error: process.env.NODE_ENV === "production" ? {} : err,
+  });
+});
+
 app.listen(8000);
 
 module.exports = app;
