@@ -26,7 +26,7 @@ backend/.cache/
 **/.env
 **/.env.*
 backend/config.json
-frontend\skynotes-frontend\.env
+frontend/skynotes-frontend/.env
 
 # === Logs and Temp Files ===
 logs/
@@ -66,3 +66,8 @@ _vimrc
 build/
 dist/
 *.local
+
+# === For Cloud === #
+backend/.elasticbeanstalk/*
+backend/.ebextensions/*
+backend/Procfile
