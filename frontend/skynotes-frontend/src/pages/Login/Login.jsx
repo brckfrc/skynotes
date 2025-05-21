@@ -13,6 +13,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
+    console.log("handleLogin..");
     e.preventDefault();
 
     if (!validateEmail(email)) {
