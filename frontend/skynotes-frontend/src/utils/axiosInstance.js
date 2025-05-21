@@ -1,14 +1,20 @@
 import axios from "axios";
 import { BASE_URL } from "./constants";
 
-console.log("axiosInstance.js - BASE_URL değeri:", BASE_URL);
 const axiosInstance = axios.create({
-  baseURL: BASE_URL,
+  // baseURL: BASE_URL,
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
   },
 });
+
+axiosInstance.defaults.baseURL = BASE_URL;
+
+console.log(
+  "axiosInstance.js - baseURL ayarlandı:",
+  axiosInstance.defaults.baseURL
+);
 
 axiosInstance.interceptors.request.use(
   (config) => {
