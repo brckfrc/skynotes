@@ -17,8 +17,6 @@ const Login = () => {
     e.preventDefault();
     console.log("Default prevented.");
 
-    console.log("BASE_URL:", BASE_URL);
-    console.log("API call URL:", `${BASE_URL}/login`);
     if (!validateEmail(email)) {
       setError("Please enter a valid email address.");
       return;
