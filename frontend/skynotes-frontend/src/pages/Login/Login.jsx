@@ -13,9 +13,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    console.log("handleLogin called.");
     e.preventDefault();
-    console.log("Default prevented.");
 
     if (!validateEmail(email)) {
       setError("Please enter a valid email address.");
