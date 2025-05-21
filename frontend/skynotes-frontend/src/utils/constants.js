@@ -5,6 +5,7 @@ console.log(
   import.meta.env.VITE_API_URL
 );
 
-export const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+export const BASE_URL =
+  "https://skynotes-api-env.eba-qb4anh9r.eu-central-1.elasticbeanstalk.com";
 
-console.log("Value of BASE_URL after assignment:", BASE_URL);
+console.log("Value of BASE_URL after assignment (hardcoded):", BASE_URL);
