@@ -3,7 +3,31 @@ require("dotenv").config();
 const config = require("./config.json");
 const mongoose = require("mongoose");
 
-mongoose.connect(config.connectionString);
+let mongoURI;
+
+if (process.env.NODE_ENV === "production") {
+  mongoURI = process.env.MONGODB_URI;
+  if (!mongoURI) {
+    console.error(
+      "ERROR: MONGODB_URI environment variable is not defined in production environment!"
+    );
+    process.exit(1);
+  }
+} else {
+  mongoURI = config.connectionString;
+  if (!mongoURI) {
+    console.error("ERROR: 'connectionString' is not defined in config.json!");
+    process.exit(1);
+  }
+}
+
+mongoose
+  .connect(mongoURI)
+  .then(() => console.log("MongoDB Connected!"))
+  .catch((err) => {
+    console.error("MongoDB Connection Error:", err);
+    process.exit(1);
+  });
 
 const User = require("./models/user.model");
 const Note = require("./models/note.model");
@@ -355,7 +379,7 @@ app.get("/search-notes/", authenticateToken, async (req, res) => {
   }
 });
 
-//404 middleware
+// 404 middleware
 app.use((req, res, next) => {
   res.status(404).json({ success: false, message: "Page not found" });
 });
