@@ -216,7 +216,9 @@ const Home = () => {
 
       <Modal
         isOpen={openAddEditModal.isShown}
-        onRequestClose={() => {}}
+        onRequestClose={() => {
+          setOpenAddEditModal({ isShown: false, type: "add", data: null });
+        }}
         style={{
           overlay: { backgroundColor: "rgba(0,0,0,0.2)" },
         }}
