@@ -116,11 +116,12 @@ const Home = () => {
   // Pinned note
   const updateIsPinned = async (noteData) => {
     const noteId = noteData._id;
+    const newIsPinnedStatus = !noteData.isPinned;
     try {
       const response = await axiosInstance.put(
         "/update-note-pinned/" + noteId,
         {
-          isPinned: !noteId.isPinned,
+          isPinned: newIsPinnedStatus,
         }
       );
 

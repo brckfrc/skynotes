@@ -32,7 +32,7 @@
   }
 
   .icon-btn {
-    @apply text-xl text-slate-300 cursor-pointer;
+    @apply text-xl cursor-pointer;
   }
 
   .icon-btn:hover {
