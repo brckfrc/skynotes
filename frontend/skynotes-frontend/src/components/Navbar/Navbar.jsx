@@ -30,14 +30,16 @@ const Navbar = ({ userInfo, onSearchNote, handleClearSearch }) => {
         SkyNotes
       </h2>
 
-      <SearchBar
-        value={searchQuery}
-        onChange={({ target }) => {
-          setSearchQuery(target.value);
-        }}
-        handleSearch={handleSearch}
-        onClearSearch={onClearSearch}
-      />
+      {userInfo && (
+        <SearchBar
+          value={searchQuery}
+          onChange={({ target }) => {
+            setSearchQuery(target.value);
+          }}
+          handleSearch={handleSearch}
+          onClearSearch={onClearSearch}
+        />
+      )}
 
       <ProfileInfo userInfo={userInfo} onLogout={onLogout} />
     </div>
