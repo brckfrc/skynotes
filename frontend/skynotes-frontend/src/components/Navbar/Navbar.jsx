@@ -23,10 +23,23 @@ const Navbar = ({ userInfo, onSearchNote, handleClearSearch }) => {
     handleClearSearch();
   };
 
+  const handleTitleClick = () => {
+    setSearchQuery("");
+    handleClearSearch();
+
+    if (userInfo) {
+      navigate("/dashboard");
+    } else {
+      navigate("/login");
+    }
+  };
+
   return (
     <div className="bg-white flex items-center justify-between px-6 py-2 drop-shadow">
-      {/* Add navigation logic here */}
-      <h2 className="text-xl font-medium text-black py-2 select-none cursor-default">
+      <h2
+        className="text-xl font-medium text-black py-2 select-none cursor-pointer"
+        onClick={handleTitleClick}
+      >
         SkyNotes
       </h2>
 
