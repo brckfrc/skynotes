@@ -171,7 +171,7 @@ const Home = () => {
         >
           {" "}
           {loading ? (
-            <p className="text-center text-slate-600"></p> //Loading Text here (maybe)
+            <p className="text-center text-slate-600"></p>
           ) : allNotes.length === 0 ? (
             <EmptyCard
               imgSrc={isSearch ? NoDataImg : AddNoteImg}
@@ -182,7 +182,7 @@ const Home = () => {
               }
             />
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-8 w-full">
               {allNotes.map((item) => (
                 <NoteCard
                   key={item._id}
@@ -223,15 +223,15 @@ const Home = () => {
         style={{
           overlay: { backgroundColor: "rgba(0,0,0,0.2)" },
         }}
-        contentLabel=""
+        contentLabel="Not Ekle/Düzenle"
         className="
-          w-[90%]             
-          max-h-[85vh]        
-          bg-white rounded-md mx-auto 
-          mt-8                
-          p-4 sm:p-5          
-          sm:w-[70%]          
-          md:w-[60%]          
+          w-[90%]
+          max-h-[85vh]
+          bg-white rounded-md mx-auto
+          mt-8
+          p-4 sm:p-5
+          sm:w-[70%]
+          md:w-[60%]
           lg:w-[40%]
           overflow-auto
         "
