@@ -104,6 +104,10 @@ SkyNotes is a minimalist, yet feature-rich MERN stack note-taking application de
 - The EmptyCard component is displayed when no notes are found.
 - **Addressed and resolved layout issues affecting note card display, particularly during search or with fewer notes.**
 
+## 🚧 Deployment Workflow Status
+
+The GitHub Actions workflow for Elastic Beanstalk deployment (`.github/workflows/deploy-backend-to-eb.yml`) is currently **disabled temporarily**.
+
 **How to Get Support:**
 
 If you have any questions or feedback about the project, please contact me via GitHub.
