@@ -203,15 +203,16 @@ const Home = () => {
           )}
         </div>
       </div>
-
-      <button
-        className="w-16 h-16 flex items-center justify-center rounded-2xl bg-blue-500 hover:bg-blue-600 absolute right-10 bottom-10 z-50 shadow-lg opacity-100 cursor-pointer"
-        onClick={() => {
-          setOpenAddEditModal({ isShown: true, type: "add", data: null });
-        }}
-      >
-        <MdAdd className="text-[32px] text-white" />
-      </button>
+      {!openAddEditModal.isShown && (
+        <button
+          className="w-16 h-16 flex items-center justify-center rounded-2xl bg-blue-500 hover:bg-blue-600 fixed right-10 bottom-10 z-50 shadow-lg opacity-100 cursor-pointer"
+          onClick={() => {
+            setOpenAddEditModal({ isShown: true, type: "add", data: null });
+          }}
+        >
+          <MdAdd className="text-[32px] text-white" />
+        </button>
+      )}
 
       <Modal
         isOpen={openAddEditModal.isShown}
@@ -220,7 +221,17 @@ const Home = () => {
           overlay: { backgroundColor: "rgba(0,0,0,0.2)" },
         }}
         contentLabel=""
-        className="w-[40%] max-h-3/4 bg-white rounded-md mx-auto mt-14 p-5 overflow-auto"
+        className="
+          w-[90%]             
+          max-h-[85vh]        
+          bg-white rounded-md mx-auto 
+          mt-8                
+          p-4 sm:p-5          
+          sm:w-[70%]          
+          md:w-[60%]          
+          lg:w-[40%]
+          overflow-auto
+        "
       >
         <AddEditNotes
           type={openAddEditModal.type}
