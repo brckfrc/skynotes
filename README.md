@@ -2,11 +2,11 @@
 
 This project is a MERN (MongoDB, Express.js, React, Node.js) full-stack web application designed to help you organize and manage your notes.
 
-**Live Demo:** [https://skynotes.borak.dev](https://skynotes.borak.dev)
+### 🌐**Live Demo:** [https://skynotes.borak.dev](https://skynotes.borak.dev)
 
 **Project Goal:**
 
-SkyNotes is a minimalist, yet feature-rich MERN stack note-taking application designed to provide users with a seamless experience for organizing their thoughts and ideas. It focuses on intuitive note management including creation, editing, deletion, and quick access via search and pinning functionalities.
+SkyNotes is a minimalist, yet feature-rich MERN stack note-taking application designed to provide users with a seamless experience for organizing their thoughts and ideas. It focuses on intuitive note management including creation, editing, deletion, and quick access via search and pinning functionalities. **A primary long-term goal for this project is to integrate with cloud services (e.g., AWS) for robust data synchronization and scalable deployment.**
 
 **Technologies Used:**
 
