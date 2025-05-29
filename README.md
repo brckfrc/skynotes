@@ -4,6 +4,13 @@ This project is a MERN (MongoDB, Express.js, React, Node.js) full-stack web appl
 
 ---
 
+## 🎥 Project Walkthrough (YouTube) – 🇹🇷
+
+📺 Watch the full development walkthrough and demo in Turkish:
+🔗 [Project Video Link](https://youtu.be/cuVuJl7IuXE)
+
+---
+
 ## 🌐 Live Demo
 
 🔗 [https://skynotes.borak.dev](https://skynotes.borak.dev)
