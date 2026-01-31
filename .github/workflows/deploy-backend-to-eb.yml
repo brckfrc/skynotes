@@ -36,7 +36,7 @@ jobs:
 
       - name: Create .zip deployment package
         run: |
-          zip -r deploy.zip . -x "node_modules/*" ".git/*" ".env*" "config.json" "dist/*" "logs/*" "*.log" "tmp/*" "temp/*" ".DS_Store" ".idea/*" ".vscode/*"
+          zip -r deploy.zip . -x "node_modules/*" ".git/*" ".env*" "dist/*" "logs/*" "*.log" "tmp/*" "temp/*" ".DS_Store" ".idea/*" ".vscode/*"
         working-directory: backend
 
       - name: Configure AWS Credentials

@@ -1,24 +1,13 @@
 require("dotenv").config();
 
-const config = require("./config.json");
 const mongoose = require("mongoose");
 
-let mongoURI;
-
-if (process.env.NODE_ENV === "production") {
-  mongoURI = process.env.MONGODB_URI;
-  if (!mongoURI) {
-    console.error(
-      "ERROR: MONGODB_URI environment variable is not defined in production environment!",
-    );
-    process.exit(1);
-  }
-} else {
-  mongoURI = config.connectionString;
-  if (!mongoURI) {
-    console.error("ERROR: 'connectionString' is not defined in config.json!");
-    process.exit(1);
-  }
+const mongoURI = process.env.MONGODB_URI;
+if (!mongoURI) {
+  console.error(
+    "ERROR: MONGODB_URI is not set. Add it to backend/.env (e.g. MongoDB Atlas connection string).",
+  );
+  process.exit(1);
 }
 
 mongoose

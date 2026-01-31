@@ -4,7 +4,7 @@ This project is a MERN (MongoDB, Express.js, React, Node.js) full-stack web appl
 
 ---
 
-## 🎥 Project Walkthrough (YouTube) – 🇹🇷
+## 🎥 Project Walkthrough (YouTube)
 
 📺 Watch the full development walkthrough and demo in Turkish:
 🔗 [Project Video Link](https://youtu.be/cuVuJl7IuXE)
@@ -82,16 +82,8 @@ It focuses on intuitive note management including creation, editing, deletion, a
 npm install
 ```
 
-3. Copy `backend/.env.example` to `backend/.env` and fill in the values (or create a `.env` with at least `ACCESS_TOKEN_SECRET=your_strong_random_secret_key`).
-4. For local development, add MongoDB connection in `backend/config.json`:
-
-```json
-{
-  "connectionString": "your_mongodb_connection_string"
-}
-```
-
-In production, set `MONGODB_URI` in `.env` instead. 5. Start the backend server by running:
+3. Copy `backend/.env.example` to `backend/.env` and fill in the values (at least `ACCESS_TOKEN_SECRET` and `MONGODB_URI`; e.g. your MongoDB Atlas connection string).
+4. Start the backend server by running:
 
 ```bash
 npm start
