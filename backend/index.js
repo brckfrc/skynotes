@@ -9,7 +9,7 @@ if (process.env.NODE_ENV === "production") {
   mongoURI = process.env.MONGODB_URI;
   if (!mongoURI) {
     console.error(
-      "ERROR: MONGODB_URI environment variable is not defined in production environment!"
+      "ERROR: MONGODB_URI environment variable is not defined in production environment!",
     );
     process.exit(1);
   }
@@ -44,7 +44,7 @@ app.use(express.json());
 app.use(
   cors({
     origin: "*",
-  })
+  }),
 );
 
 app.get("/", (req, res) => {
@@ -394,7 +394,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 8001;
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });

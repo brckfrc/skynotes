@@ -82,9 +82,8 @@ It focuses on intuitive note management including creation, editing, deletion, a
 npm install
 ```
 
-3. Create a `.env` file in the `backend` directory.
-   `ACCESS_TOKEN_SECRET=your_strong_random_secret_key`
-4. Add MongoDB connection in config.json:
+3. Copy `backend/.env.example` to `backend/.env` and fill in the values (or create a `.env` with at least `ACCESS_TOKEN_SECRET=your_strong_random_secret_key`).
+4. For local development, add MongoDB connection in `backend/config.json`:
 
 ```json
 {
@@ -92,7 +91,7 @@ npm install
 }
 ```
 
-5. Start the backend server by running:
+In production, set `MONGODB_URI` in `.env` instead. 5. Start the backend server by running:
 
 ```bash
 npm start
@@ -107,23 +106,24 @@ npm start
 npm install
 ```
 
-3. Start the frontend development server:
+3. (Optional) Copy `frontend/.env.example` to `frontend/.env` to set API URL and dev port.
+4. Start the frontend development server:
 
 ```bash
 npm run dev
 ```
 
-4.  Access the application in your browser
+5. Access the application in your browser:
 
-- Frontend: http://localhost:5173
-- Backend: http://localhost:8000
+- Frontend: http://localhost:5174
+- Backend: http://localhost:8001
 
 ---
 
 ## 📚 Additional Information:
 
-- Created using:
-  npm create vite@latest skynotes-frontend
+- Frontend (in `frontend/`) was created with:
+  npm create vite@latest
 
 - Tailwind CSS setup:
   Tailwind Vite Installation Guide
