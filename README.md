@@ -73,6 +73,8 @@ It focuses on intuitive note management including creation, editing, deletion, a
 
 ## ⚙️ Installation & Running
 
+**Prerequisites:** Node.js 24 (see `.nvmrc`; use `nvm use` if you use nvm).
+
 ### 🔧 Backend Setup
 
 1. Navigate to the `backend` directory.
@@ -155,9 +157,10 @@ npm run dev
 - The EmptyCard component is displayed when no notes are found.
 - **Addressed and resolved layout issues affecting note card display, particularly during search or with fewer notes.**
 
-## 🚧 Deployment Workflow Status
+## 🚧 Deployment
 
-The GitHub Actions workflow for Elastic Beanstalk deployment (`.github/workflows/deploy-backend-to-eb.yml`) is currently **temporarily disabled**.
+- **YunoHost:** A GitHub Actions workflow (`.github/workflows/deploy-yunohost.yml`) builds and deploys to a YunoHost server via rsync. See **[docs/DEPLOYMENT-YUNOHOST.md](docs/DEPLOYMENT-YUNOHOST.md)** for setup (Nginx, PM2, SSO, secrets).
+- **Elastic Beanstalk:** The workflow `.github/workflows/deploy-backend-to-eb.yml` is currently **temporarily disabled**.
 
 ## 🙋 How to Get Support:
 
