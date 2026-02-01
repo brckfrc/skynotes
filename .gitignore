@@ -21,7 +21,6 @@ backend/.cache/
 !.env.example
 !**/.env.example
 backend/config.json
-frontend/.env
 
 # === Logs and Temp Files ===
 logs/
