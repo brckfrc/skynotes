@@ -1,6 +1,6 @@
 # === Node.js Files ===
 node_modules/
-package-lock.json
+/package-lock.json
 yarn.lock
 .pnp
 .pnp.js
@@ -35,7 +35,6 @@ lerna-debug.log*
 tmp/
 temp/
 node_modules/**/._*
-**/.eslintconfig.mjs
 
 # === System Files ===
 .DS_Store
@@ -65,4 +64,3 @@ dist/
 # === For Cloud === #
 backend/.elasticbeanstalk/*
 backend/.ebextensions/*
-backend/Procfile
