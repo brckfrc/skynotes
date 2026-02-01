@@ -1,0 +1,91 @@
+# SkyNotes – Deploy to YunoHost
+# Copies code and build output to the server only. No artifacts stored on GitHub; server gets rsync --delete (no file buildup).
+# Nginx, PM2, .env are configured manually on the server (docs/DEPLOYMENT-YUNOHOST.md).
+
+name: Deploy to YunoHost
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "backend/**"
+      - "frontend/**"
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: "24"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    concurrency:
+      group: deploy-yunohost
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+
+      # Frontend build (API URL is baked into the build)
+      - name: Build frontend
+        working-directory: frontend
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL || 'https://api.skynotes.borak.dev' }}
+        run: |
+          npm ci
+          npm run build
+
+      # Backend: install deps only (.env lives on server)
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm ci --omit=dev
+
+      # Set deploy flag so we can gate deploy/reminder without using secrets in 'if' (linter-friendly).
+      - name: Check deploy config
+        id: check-deploy
+        run: |
+          if [ -n "$DEPLOY_HOST" ]; then echo "run_deploy=true" >> $GITHUB_OUTPUT; else echo "run_deploy=false" >> $GITHUB_OUTPUT; fi
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+
+      # Deploy to server via rsync. Required secrets: DEPLOY_HOST, DEPLOY_USER, SSH_PRIVATE_KEY; optional: DEPLOY_PATH.
+      - name: Deploy to YunoHost server
+        id: deploy
+        if: steps.check-deploy.outputs.run_deploy == 'true'
+        env:
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH || '/home/bora/Projeler/skynotes' }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p ${{ secrets.DEPLOY_PORT || '22' }} -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || true
+          rsync -avz --delete -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -p ${{ secrets.DEPLOY_PORT || '22' }}" \
+            --exclude 'node_modules' --exclude '.env' --exclude 'config.json' \
+            backend/ ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ env.DEPLOY_PATH }}/backend/
+          rsync -avz --delete -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -p ${{ secrets.DEPLOY_PORT || '22' }}" \
+            frontend/dist/ ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ env.DEPLOY_PATH }}/frontend/dist/
+
+      # Optional: install backend deps and restart PM2 on server (uses nvm if available)
+      - name: Install deps and restart backend on server
+        if: steps.deploy.outcome == 'success'
+        env:
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH || '/home/bora/Projeler/skynotes' }}
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -p ${{ secrets.DEPLOY_PORT || '22' }} \
+            ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} \
+            "cd ${{ env.DEPLOY_PATH }}/backend && (source ~/.nvm/nvm.sh 2>/dev/null && nvm use) || true && npm install --omit=dev && pm2 restart skynotes-api"
+
+      - name: Post-deploy summary
+        if: steps.deploy.outcome == 'success'
+        run: |
+          echo "Deploy complete. Backend deps installed and pm2 restart skynotes-api run on server."
+          echo "If you skipped the SSH step or it failed, on the server run: cd backend && npm install --omit=dev && pm2 restart skynotes-api"

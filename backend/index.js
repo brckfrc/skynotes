@@ -263,7 +263,7 @@ app.delete("/delete-note/:noteId", authenticateToken, async (req, res) => {
     });
   } catch (error) {
     if (process.env.NODE_ENV === "development") {
-      console.error("Hata:", error);
+      console.error("Error:", error);
     }
 
     return res.status(500).json({
@@ -287,7 +287,7 @@ app.get("/get-all-notes", authenticateToken, async (req, res) => {
     });
   } catch (error) {
     if (process.env.NODE_ENV === "development") {
-      console.error("Hata:", error);
+      console.error("Error:", error);
     }
 
     return res.status(500).json({
@@ -321,7 +321,7 @@ app.put("/update-note-pinned/:noteId", authenticateToken, async (req, res) => {
     });
   } catch (error) {
     if (process.env.NODE_ENV === "development") {
-      console.error("Hata:", error);
+      console.error("Error:", error);
     }
 
     return res.status(500).json({
@@ -358,7 +358,7 @@ app.get("/search-notes/", authenticateToken, async (req, res) => {
     });
   } catch (error) {
     if (process.env.NODE_ENV === "development") {
-      console.error("Hata:", error);
+      console.error("Error:", error);
     }
 
     return res.status(500).json({
