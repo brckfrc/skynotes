@@ -1,0 +1,26 @@
+# Skynotes → Contabo otomatik deploy (qadim/chord ile aynı model)
+name: Deploy to server
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            set -e
+            cd ${{ secrets.PROJECT_DIR }}
+            git fetch origin
+            git reset --hard "origin/$(git rev-parse --abbrev-ref HEAD)"
+            docker compose build
+            docker compose up -d
+            docker image prune -f
