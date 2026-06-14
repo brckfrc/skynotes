@@ -1,0 +1,44 @@
+# Skynotes (MERN) — Contabo app-host. Repo köküne konur; Contabo git clone + build.
+# Sırlar .env'de (ACCESS_TOKEN_SECRET) — git'te DEĞİL.
+name: skynotes
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: skynotes-mongo
+    restart: unless-stopped
+    volumes:
+      - mongo:/data/db
+    networks: [net]
+    # host'a port AÇMAZ (yalnız iç ağ)
+
+  backend:
+    build: ./backend
+    container_name: skynotes-backend
+    restart: unless-stopped
+    depends_on: [mongo]
+    environment:
+      PORT: "8001"
+      NODE_ENV: production
+      MONGODB_URI: mongodb://mongo:27017/skynotes
+      ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
+    ports:
+      - "127.0.0.1:8084:8001"   # Caddy /api → buraya
+    networks: [net]
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: /api
+    container_name: skynotes-frontend
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8083:80"     # Caddy / → buraya
+    networks: [net]
+
+volumes:
+  mongo:
+
+networks:
+  net:
