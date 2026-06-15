@@ -21,6 +21,7 @@ jobs:
             cd ${{ secrets.PROJECT_DIR }}
             git fetch origin
             git reset --hard "origin/$(git rev-parse --abbrev-ref HEAD)"
-            docker compose build
-            docker compose up -d
+            docker compose down --remove-orphans || true
+            docker rm -f skynotes-frontend skynotes-backend skynotes-mongo 2>/dev/null || true
+            docker compose up -d --build
             docker image prune -f
