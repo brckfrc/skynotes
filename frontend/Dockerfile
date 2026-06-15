@@ -1,5 +1,5 @@
 # Çok aşamalı: Vite build → nginx ile statik servis
-FROM node:20-alpine AS build
+FROM node:20-alpine@sha256:fb4cd12c85ee03686f6af5362a0b0d56d50c58a04632e6c0fb8363f609372293 AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
@@ -9,7 +9,7 @@ ARG VITE_API_URL=/api
 ENV VITE_API_URL=$VITE_API_URL
 RUN npm run build
 
-FROM nginx:alpine
+FROM nginx:alpine@sha256:8b1e78743a03dbb2c95171cc58639fef29abc8816598e27fb910ed2e621e589a
 COPY --from=build /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
