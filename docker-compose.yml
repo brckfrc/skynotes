@@ -4,7 +4,7 @@ name: skynotes
 
 services:
   mongo:
-    image: mongo:7
+    image: mongo:7@sha256:8ecb514b00bdcc0bde67ef4e6c330385377a9dc68e24ee94e28c07c891647348
     container_name: skynotes-mongo
     restart: unless-stopped
     volumes:
