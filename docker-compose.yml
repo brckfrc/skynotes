@@ -6,6 +6,7 @@ services:
   mongo:
     image: mongo:7@sha256:8ecb514b00bdcc0bde67ef4e6c330385377a9dc68e24ee94e28c07c891647348
     container_name: skynotes-mongo
+    command: ["--auth"]
     restart: unless-stopped
     volumes:
       - mongo:/data/db
@@ -20,7 +21,7 @@ services:
     environment:
       PORT: "8001"
       NODE_ENV: production
-      MONGODB_URI: mongodb://mongo:27017/skynotes
+      MONGODB_URI: mongodb://skynotes:${MONGO_APP_PASSWORD}@mongo:27017/skynotes?authSource=skynotes
       ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
     ports:
       - "127.0.0.1:8084:8001"   # Caddy /api → buraya
