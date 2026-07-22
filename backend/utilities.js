@@ -6,9 +6,16 @@ function authenticateToken(req, res, next) {
 
   if (!token) return res.sendStatus(401);
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
     if (err) return res.sendStatus(401);
-    req.user = user;
+    
+    // Support both new sanitized payload ({ userId, email }) and legacy payload ({ user: { _id, ... } })
+    const userId = decoded.userId || (decoded.user && decoded.user._id);
+    const email = decoded.email || (decoded.user && decoded.user.email);
+    
+    if (!userId) return res.sendStatus(401);
+
+    req.user = { _id: userId, email };
     next();
   });
 }
@@ -16,3 +23,4 @@ function authenticateToken(req, res, next) {
 module.exports = {
   authenticateToken,
 };
+

@@ -23,11 +23,17 @@ const Note = require("./models/note.model");
 
 const express = require("express");
 const cors = require("cors");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
+const bcrypt = require("bcryptjs");
+const escapeStringRegexp = require("escape-string-regexp");
+
 const app = express();
 
 const jwt = require("jsonwebtoken");
 const { authenticateToken } = require("./utilities");
 
+app.use(helmet());
 app.use(express.json());
 
 app.use(
@@ -35,6 +41,26 @@ app.use(
     origin: "*",
   }),
 );
+
+// Rate Limiters
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20, // 20 requests per IP
+  message: { error: true, message: "Too many login/registration attempts. Please try again later." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 300,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.use("/create-account", authLimiter);
+app.use("/login", authLimiter);
+app.use(apiLimiter);
 
 app.get("/", (req, res) => {
   res.json({ data: "hello" });
@@ -75,21 +101,28 @@ app.post("/create-account", async (req, res) => {
     });
   }
 
+  const hashedPassword = await bcrypt.hash(password, 10);
+
   const user = new User({
     fullName,
     email,
-    password,
+    password: hashedPassword,
   });
 
   await user.save();
 
-  const accessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "36000m",
-  });
+  const accessToken = jwt.sign(
+    { userId: user._id, email: user.email },
+    process.env.ACCESS_TOKEN_SECRET,
+    { expiresIn: "7d" }
+  );
+
+  const userResponse = user.toObject();
+  delete userResponse.password;
 
   return res.json({
     error: false,
-    user,
+    user: userResponse,
     accessToken,
     message: "Registration Successful",
   });
@@ -119,11 +152,22 @@ app.post("/login", async (req, res) => {
     return res.status(400).json({ message: "User not found" });
   }
 
-  if (userInfo.email == email && userInfo.password == password) {
-    const user = { user: userInfo };
-    const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: "36000m",
-    });
+  // Password verification: support both bcrypt hash and automatic migration for legacy plain text passwords
+  let isPasswordValid = await bcrypt.compare(password, userInfo.password);
+  
+  if (!isPasswordValid && userInfo.password === password) {
+    // Migration: hash legacy plain text password and update DB
+    userInfo.password = await bcrypt.hash(password, 10);
+    await userInfo.save();
+    isPasswordValid = true;
+  }
+
+  if (isPasswordValid) {
+    const accessToken = jwt.sign(
+      { userId: userInfo._id, email: userInfo.email },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "7d" }
+    );
 
     return res.json({
       error: false,
@@ -141,9 +185,9 @@ app.post("/login", async (req, res) => {
 
 // Get User
 app.get("/get-user", authenticateToken, async (req, res) => {
-  const { user } = req.user;
+  const userId = req.user._id;
 
-  const isUser = await User.findOne({ _id: user._id });
+  const isUser = await User.findOne({ _id: userId });
 
   if (!isUser) {
     return res.sendStatus(401);
@@ -333,7 +377,7 @@ app.put("/update-note-pinned/:noteId", authenticateToken, async (req, res) => {
 
 // Search notes
 app.get("/search-notes/", authenticateToken, async (req, res) => {
-  const { user } = req.user;
+  const userId = req.user._id;
   const { query } = req.query;
 
   if (!query) {
@@ -343,11 +387,12 @@ app.get("/search-notes/", authenticateToken, async (req, res) => {
   }
 
   try {
+    const escapedQuery = escapeStringRegexp(query);
     const matchingNotes = await Note.find({
-      userId: user._id,
+      userId: userId,
       $or: [
-        { title: { $regex: new RegExp(query, "i") } },
-        { content: { $regex: new RegExp(query, "i") } },
+        { title: { $regex: new RegExp(escapedQuery, "i") } },
+        { content: { $regex: new RegExp(escapedQuery, "i") } },
       ],
     });
 
