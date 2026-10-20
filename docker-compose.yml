@@ -4,7 +4,7 @@ name: skynotes
 
 services:
   mongo:
-    image: mongo:7@sha256:9650758f83af117fc96699f030a44f9300bed839734e67012f56df05b2fd6290
+    image: mongo:7@sha256:c53852c00c23ca9f23fc39690350ffa9a80e3642fe8f96879726d8da0abe80a7
     container_name: skynotes-mongo
     command: ["--auth"]
     restart: unless-stopped
