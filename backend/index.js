@@ -26,7 +26,8 @@ const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const bcrypt = require("bcryptjs");
-const escapeStringRegexp = require("escape-string-regexp");
+// escape-string-regexp 5.x is ESM-only; require() returns the module namespace.
+const { default: escapeStringRegexp } = require("escape-string-regexp");
 
 const app = express();
 
@@ -207,7 +208,7 @@ app.get("/get-user", authenticateToken, async (req, res) => {
 // Add Note
 app.post("/add-note", authenticateToken, async (req, res) => {
   const { title, content, tags } = req.body;
-  const { user } = req.user;
+  const user = req.user;
 
   if (!title) {
     return res.status(400).json({ error: true, message: "Title is required" });
@@ -249,7 +250,7 @@ app.post("/add-note", authenticateToken, async (req, res) => {
 app.put("/edit-note/:noteId", authenticateToken, async (req, res) => {
   const noteId = req.params.noteId;
   const { title, content, tags, isPinned } = req.body;
-  const { user } = req.user;
+  const user = req.user;
 
   if (!title && !content && !tags) {
     return res
@@ -290,7 +291,7 @@ app.put("/edit-note/:noteId", authenticateToken, async (req, res) => {
 // Delete Note
 app.delete("/delete-note/:noteId", authenticateToken, async (req, res) => {
   const noteId = req.params.noteId;
-  const { user } = req.user;
+  const user = req.user;
 
   try {
     const note = await Note.findOne({ _id: noteId, userId: user._id });
@@ -319,7 +320,7 @@ app.delete("/delete-note/:noteId", authenticateToken, async (req, res) => {
 
 // Get All Notes
 app.get("/get-all-notes", authenticateToken, async (req, res) => {
-  const { user } = req.user;
+  const user = req.user;
 
   try {
     const notes = await Note.find({ userId: user._id }).sort({ isPinned: -1 });
@@ -345,7 +346,7 @@ app.get("/get-all-notes", authenticateToken, async (req, res) => {
 app.put("/update-note-pinned/:noteId", authenticateToken, async (req, res) => {
   const noteId = req.params.noteId;
   const { isPinned } = req.body;
-  const { user } = req.user;
+  const user = req.user;
 
   try {
     const note = await Note.findOne({ _id: noteId, userId: user._id });
