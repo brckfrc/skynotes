@@ -13,7 +13,9 @@ This project is a MERN (MongoDB, Express.js, React, Node.js) full-stack web appl
 
 ## 🌐 Live Demo
 
-🔗 [https://skynotes.borak.dev](https://skynotes.borak.dev)
+🔒 The live demo (skynotes.borak.dev) was shut down in October 2026. Screenshot of the final version:
+
+![SkyNotes notes view](docs/screenshot.png)
 
 ---
 
